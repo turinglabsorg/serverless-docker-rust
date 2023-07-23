@@ -1,0 +1,30 @@
+org: turinglabs
+app: tests
+service: aws-rust-docker
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  timeout: 30
+  memorySize: 1024
+  architecture: arm64
+  ecr:
+    images:
+      appimage:
+        path: ./
+        platform: linux/arm64
+
+functions:
+  hello:
+    image:
+      name: appimage
+      entryPoint:
+        - '/hello/target/release/hello'
+    events:
+      - http:
+          path: /
+          method: ANY
+      - http:
+          path: /{proxy+}
+          method: ANY
